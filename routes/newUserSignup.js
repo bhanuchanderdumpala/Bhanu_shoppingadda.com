@@ -11,8 +11,20 @@ router.post('/', async (req, res) => {
     var userAccountDetails = req.body;
     // Validation for required fields
     if (!userAccountDetails.email || !userAccountDetails.password || !userAccountDetails.mobile) {
-        resObj.msg = 'Email, password, and mobile are required';
-        return res.send(JSON.stringify(resObj));
+        resObj.msg = 'All fields are required: email, password, and mobile.';
+        resObj.type = 'required';
+        return res.status(400).send(JSON.stringify(resObj));
+    }
+
+    // Restrict future DOB
+    if (userAccountDetails.dob) {
+        const dobDate = new Date(userAccountDetails.dob);
+        const now = new Date();
+        if (dobDate > now) {
+            resObj.msg = 'Date of Birth cannot be in the future.';
+            resObj.type = 'invalid_dob';
+            return res.status(400).send(JSON.stringify(resObj));
+        }
     }
     try {
         // Check for existing email or mobile number
@@ -24,35 +36,42 @@ router.post('/', async (req, res) => {
         }, 'find', 'userAccountDetails');
 
         if (duplicateUser && duplicateUser.length > 0) {
-            if (duplicateUser.some(u => u.email === userAccountDetails.email)) {
-                resObj.msg = 'already email id is existing';
+            const emailExists = duplicateUser.some(u => u.email === userAccountDetails.email);
+            const mobileExists = duplicateUser.some(u => u.mobile === userAccountDetails.mobile);
+            if (emailExists && mobileExists) {
+                resObj.msg = 'Both email and mobile number are already registered.';
+                resObj.type = 'duplicate_both';
+            } else if (emailExists) {
+                resObj.msg = 'Email is already registered.';
+                resObj.type = 'duplicate_email';
             } else {
-                resObj.msg = 'mobile number already exists';
+                resObj.msg = 'Mobile number is already registered.';
+                resObj.type = 'duplicate_mobile';
             }
-            return res.send(JSON.stringify(resObj));
+            return res.status(400).send(JSON.stringify(resObj));
         }
 
         bcrypt.hash(userAccountDetails.password, 5, function(err, hash) {
             if (err) {
-                resObj.msg = 'Error';
+                resObj.msg = 'An error occurred. Please try again.';
                 return res.send(JSON.stringify(resObj));
             }
             userAccountDetails.password = hash;
             dbUtils.doDbCommunication(userAccountDetails, 'insertOne', 'userAccountDetails').then((result) => {
                 if(!result) {
-                    resObj.msg = 'Error';
+                    resObj.msg = 'An error occurred. Please try again.';
                 } else {
                     resObj.msg = 'Done';
                 }
                 res.send(JSON.stringify(resObj));
             }).catch((err) => {
-                resObj.msg = 'Error';
+                resObj.msg = 'An error occurred. Please try again.';
                 res.send(JSON.stringify(resObj));
             });
         });
     } catch(err) {
         console.log(err);
-        resObj.msg = 'Error';
+    resObj.msg = 'An error occurred. Please try again.';
         res.send(JSON.stringify(resObj));
     }
 });
