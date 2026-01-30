@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>
+      body{background:#f7f9fc;padding-top:70px}
+      .product-img{max-width:100%;height:360px;object-fit:contain;background:#fff;padding:10px;border-radius:6px}
+      .toast-pos{position:fixed;right:20px;bottom:20px;z-index:1050}
+    </style>
+  </head>
+  <body>
+    <div id="siteHeader"></div>
+
+    <div class="container">
+      <div id="productContainer" class="row align-items-start">
+        <!-- product details injected here -->
+      </div>
+    </div>
+
+    <div class="toast-pos">
+      <div id="msgToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">Added to cart</div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/jquery.js"></script>
+    <script src="/javascripts/main.js"></script>
+    <script src="/javascripts/login.js"></script>
+    <script src="/javascripts/logoutUser.js"></script>
+    <script src="/javascripts/profile.js"></script>
+    <script src="/javascripts/cartStorage.js"></script>
+    <script src="/javascripts/commonLayout.js"></script>
+    <script src="/javascripts/productView.js"></script>
+  </body>
+</html>

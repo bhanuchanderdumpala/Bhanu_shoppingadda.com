@@ -101,6 +101,8 @@ var doUserSignup = () => {
         clearFieldErrors();
         if (err && err.response && err.response.data && err.response.data.errors) {
             const errs = err.response.data.errors;
+
+            
             errs.forEach(e => {
                 const sel = fieldMap[e.field] || fieldMap[e.field.toLowerCase()];
                 if (sel) showFieldError(sel, e.message);
