@@ -1,24 +1,6 @@
 
 
-/* .addNewProductDetails {
-    ul {
-        margin: 20px auto;
-        padding: 10px;
-        width: 900px;
-    }
-    li {
-        list-style: none;
-        border: 1px solid orange;
-        margin: 15px;
-        padding: 10px;
-    }
 
-    .title {
-        font-weight: bold;
-        text-align: center;
-
-    }
-} */
 
 .addNewProductDetails {
     max-width: 600px;

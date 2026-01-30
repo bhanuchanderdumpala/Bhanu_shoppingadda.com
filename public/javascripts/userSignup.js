@@ -22,8 +22,38 @@ var doUserSignup = () => {
     userDetails.address = $("#s_address").val();
     userDetails.rpassword = $("#s_rpassword").val();
 
+    // Clear any previous field errors
+    const fieldMap = {
+        accountId: '#s_accountId',
+        password: '#s_password',
+        email: '#accountMailid',
+        mobile: '#s_mobilenumber',
+        address: '#s_address',
+        rpassword: '#s_rpassword'
+    };
 
-    // Client-side validation for required fields
+    const clearFieldErrors = () => {
+        Object.values(fieldMap).forEach(sel => {
+            $(sel).next('.field-error').remove();
+            $(sel).removeClass('input-error');
+        });
+        $("#signupMsg").hide();
+        $("#signupMsg span").removeClass("error-message");
+    };
+
+    const showFieldError = (selector, msg) => {
+        const $el = $(selector);
+        $el.addClass('input-error');
+        if ($el.next('.field-error').length === 0) {
+            $el.after('<span class="field-error" style="color:#d9534f;display:block;margin-top:4px;">' + msg + '</span>');
+        } else {
+            $el.next('.field-error').text(msg);
+        }
+    };
+
+    clearFieldErrors();
+
+    // Client-side minimal required check
     if (!userDetails.mailId || !userDetails.password || !userDetails.mobileNumber) {
         $("#signupMsg").show();
         $("#signupMsg span").text("All fields are required: email, password, and mobile.");
@@ -31,16 +61,12 @@ var doUserSignup = () => {
         return;
     }
 
-    // Client-side validation for DOB (no future date)
-    if (userDetails.dob) {
-        var dobDate = new Date(userDetails.dob);
-        var now = new Date();
-        if (dobDate > now) {
-            $("#signupMsg").show();
-            $("#signupMsg span").text("Date of Birth cannot be in the future.");
-            $("#signupMsg span").addClass("error-message");
-            return;
-        }
+    // Client-side mobile validation: exactly 10 digits, no negatives or special chars
+    const mobileRegex = /^\d{10}$/;
+    if (!mobileRegex.test(userDetails.mobileNumber)) {
+        showFieldError(fieldMap.mobile, 'Mobile number must be exactly 10 digits and contain only numbers.');
+        $(fieldMap.mobile).focus();
+        return;
     }
 
     axios.post('/newUserSignup/register', {
@@ -57,21 +83,39 @@ var doUserSignup = () => {
         if (result.data.msg == 'Done') {
             $("#signupMsg span").text("Signed up Successfully");
             resetFormData();
+        } else if (result.data && result.data.errors) {
+            // show inline errors and focus first
+            const errs = result.data.errors || [];
+            errs.forEach(e => {
+                const sel = fieldMap[e.field] || fieldMap[e.field.toLowerCase()];
+                if (sel) showFieldError(sel, e.message);
+            });
+            const first = result.data.firstError || (errs[0] && errs[0].field);
+            const firstSel = fieldMap[first];
+            if (firstSel) $(firstSel).focus();
         } else {
             $("#signupMsg span").text(result.data.msg || "Error while doing signup");
             $("#signupMsg span").addClass("error-message");
         }
     }).catch((err) => {
-        // Show backend error for DOB or other errors
-        let msg = "Error while doing signup";
-        if (err.response && err.response.data) {
-            try {
-                const data = typeof err.response.data === 'string' ? JSON.parse(err.response.data) : err.response.data;
-                if (data.msg) msg = data.msg;
-            } catch(e) {}
+        clearFieldErrors();
+        if (err && err.response && err.response.data && err.response.data.errors) {
+            const errs = err.response.data.errors;
+            errs.forEach(e => {
+                const sel = fieldMap[e.field] || fieldMap[e.field.toLowerCase()];
+                if (sel) showFieldError(sel, e.message);
+            });
+            const first = (err.response.data.firstError) || (errs[0] && errs[0].field);
+            const firstSel = fieldMap[first];
+            if (firstSel) $(firstSel).focus();
+            $("#signupMsg").show();
+            $("#signupMsg span").text("Please fill the marked fields.");
+            $("#signupMsg span").addClass("error-message");
+            return;
         }
+
         $("#signupMsg").show();
-        $("#signupMsg span").text(msg);
+        $("#signupMsg span").text("Error while doing signup");
         $("#signupMsg span").addClass("error-message");
     });
 }
