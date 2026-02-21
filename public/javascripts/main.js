@@ -1,4 +1,4 @@
-let captcha = null; // Declare global captcha variable
+// write captcha text into all captcha blocks
 
 document.addEventListener("DOMContentLoaded", () => {
     addCaptchaText();
@@ -17,10 +17,9 @@ var addCaptchaText = () => {
     // Make sure this function is available globally or imported
     if (typeof generateCaptchaText === 'function') {
         const captchaText = generateCaptchaText('LNULN');
-        document.querySelector(".captchaBlock").innerText = captchaText;
-
-        if (captcha) captcha.innerText = '';
-        captcha = document.querySelector(".captchaBlock");
+        // populate every captchaBlock on the page
+        const nodes = document.querySelectorAll('.captchaBlock');
+        nodes.forEach(n => { n.innerText = captchaText; });
     } else {
         console.error("generateCaptchaText is not defined");
     }

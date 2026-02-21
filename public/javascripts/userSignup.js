@@ -81,7 +81,19 @@ var doUserSignup = () => {
         $("#signupMsg").show();
         $("#signupMsg span").removeClass("error-message");
         if (result.data.msg == 'Done') {
-            $("#signupMsg span").text("Signed up Successfully");
+            // Show Bootstrap toast with actions
+            try {
+                var toastEl = document.getElementById('signupSuccessToast');
+                if (toastEl) {
+                    document.getElementById('signupToastMessage').innerText = 'Signup Successful!';
+                    var bsToast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3000 });
+                    bsToast.show();
+                }
+            } catch (e) {
+                // fallback to message
+                $("#signupMsg span").text("Signed up Successfully");
+            }
+            // clear form fields but keep modal open (user can choose actions in toast)
             resetFormData();
         } else if (result.data && result.data.errors) {
             // show inline errors and focus first
@@ -121,3 +133,49 @@ var doUserSignup = () => {
         $("#signupMsg span").addClass("error-message");
     });
 }
+
+// Wire modal reset on close and toast button actions
+document.addEventListener('DOMContentLoaded', function () {
+    var signupModalEl = document.getElementById('signupModal');
+    if (signupModalEl) {
+        signupModalEl.addEventListener('hidden.bs.modal', function () {
+            resetFormData();
+            // remove inline error indicators
+            $('.field-error').remove();
+            $('.input-error').removeClass('input-error');
+            $("#signupMsg").hide();
+        });
+    }
+
+    var toastEl = document.getElementById('signupSuccessToast');
+    if (toastEl) {
+        // Ensure toast will auto-hide after 3s
+        var toastObj = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3000 });
+
+        var loginBtn = document.getElementById('toastLoginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', function () {
+                // close signup modal if open
+                if (signupModalEl) {
+                    var modalInst = bootstrap.Modal.getInstance(signupModalEl) || bootstrap.Modal.getOrCreateInstance(signupModalEl);
+                    modalInst.hide();
+                }
+                // navigate to login anchor
+                window.location.href = 'index.html#login';
+            });
+        }
+
+        var anotherBtn = document.getElementById('toastSignupAnotherBtn');
+        if (anotherBtn) {
+            anotherBtn.addEventListener('click', function () {
+                // reset form and keep modal open
+                resetFormData();
+                if (signupModalEl) {
+                    bootstrap.Modal.getOrCreateInstance(signupModalEl).show();
+                }
+                // hide toast immediately
+                toastObj.hide();
+            });
+        }
+    }
+});

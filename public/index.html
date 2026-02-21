@@ -23,10 +23,14 @@
         <link rel="stylesheet" href="lib/ratingStars_lib/rating.css">
         <script src="javascripts/userSignup.js"></script>
         <script src="javascripts/order.js"></script>
-        <script src="javascripts/orderslist.js"></script>
         <script src="javascripts/currentdate.js"></script>
         <script src="javascripts/profile.js"></script>
         <script src="javascripts/logoutUser.js"></script>
+        <link rel="stylesheet" href="css/index.css">
+        <script src="javascripts/addToCart.js"></script>
+        <script src="javascripts/addNewProduct.js"></script>
+
+
 
         <body>
             <div class="container-fluid">
@@ -188,7 +192,7 @@
                     </div>
 
                     <!-- 3. Social Media Icons -->
-                    <div class="row mb-4 text-center">
+                    <div class="row mb-3 text-center">
                         <div class="col">
                             <h5>Follow Us</h5>
                             <div
@@ -210,7 +214,7 @@
                                     <i class="fab fa-linkedin"></i>
                                 </a>
 
-                                <a href="https://youtube.com" target="_blank"
+                                <a href="www.youtube.com/@Bhanuchanderreddydumpala" target="_blank"
                                     class="text-secondary fs-4">
                                     <i class="fab fa-youtube"></i>
                                 </a>
@@ -223,7 +227,7 @@
                         <div class="col text-right">
                             <p class="text-body-secondary mb-0">© 2025
                                 <strong>ShopInHand</strong>. All rights
-                                reserved.</p>
+                                reserved. mobile:9959924532</p>
                         </div>
                     </div>
 
@@ -260,7 +264,7 @@
                                 <li class="row">
                                     <div class="captchaBlock col"></div>
                                     <i class="bi bi-arrow-clockwise col"
-                                        onclick="addCapthcaText()"></i>
+                                        onclick="addCaptchaText()"></i>
                                 </li>
                                 <li>
                                     <input id="captchaText" type="text"
@@ -295,7 +299,7 @@
             </div>
 
             <!-- Signup Modal-->
-            <div class="modal" tabindex="-1" id="signupModal">
+            <div class="modal fade" tabindex="-1" id="signupModal">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -400,3 +404,66 @@
         </body>
 
     </html>
+
+            <!-- Signup success toast (centered, larger) -->
+            <!-- <div class="position-fixed top-50 start-50 translate-middle" style="z-index: 2000; pointer-events: 2000;">
+                <div id="signupSuccessToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="min-width:720px; max-width:90%; pointer-events: auto;">
+                    <div class="toast-header" style="font-size:1.05rem; padding:.75rem .75rem;">
+                        <strong class="me-auto text-success">Success</strong>
+                        <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" style="font-size:1.05rem; padding:.85rem;">
+                        <div id="signupToastMessage">Signup Successful!</div>
+                        <div class="mt-3 pt-1">
+                            <button type="button" id="toastLoginBtn" class="btn btn-primary me-2" style="padding:.45rem .75rem; font-size:0.95rem;">Login</button>
+                            <button type="button" id="toastSignupAnotherBtn" class="btn btn-secondary" style="padding:.45rem .75rem; font-size:0.95rem;">Signup with Another User</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div class="position-fixed top-50 start-50 translate-middle"
+     style="z-index:3000; pointer-events:none;">
+
+        <div id="signupSuccessToast"
+            class="toast premium-toast border-0"
+         role="alert"
+         aria-live="assertive"
+         aria-atomic="true"
+         style="pointer-events:auto;">
+
+        <!-- Header -->
+        <div class="toast-header premium-header">
+            <div class="success-icon">
+                ✓
+            </div>
+            <strong class="me-auto fs-5">Registration Successful</strong>
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="toast-body text-center">
+
+            <div id="signupToastMessage" class="premium-message">
+                🎉 Your account has been created successfully!
+            </div>
+
+            <div class="premium-buttons">
+                <button type="button"
+                        id="toastLoginBtn"
+                        class="btn btn-success rounded-pill px-4">
+                    Login
+                </button>
+
+                <button type="button"
+                        id="toastSignupAnotherBtn"
+                        class="btn btn-outline-secondary rounded-pill px-4">
+                    Signup with Another User
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
