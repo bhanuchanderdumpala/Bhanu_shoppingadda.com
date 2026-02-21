@@ -340,6 +340,68 @@
   
 }
 
+/* Premium Toast Container */
+.premium-toast {
+    min-width: 600px;
+    max-width: 90%;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    animation: toastFadeZoom 0.4s ease-in-out;
+}
+
+/* Premium Header */
+.premium-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: #fff;
+    padding: 1.2rem 1.2rem;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+/* Success Circle Icon */
+.success-icon {
+    width: 42px;
+    height: 42px;
+    background: #ffffff;
+    color: #28a745;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Message */
+.premium-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Buttons Alignment */
+.premium-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Smooth Animation */
+@keyframes toastFadeZoom {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 
 
 

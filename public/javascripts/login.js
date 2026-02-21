@@ -5,6 +5,25 @@ var validateUserCredentials = () => {
     userData.accountId = $("#userAccountId").val();
     userData.password = $("#accountPassword").val();
 
+    // Captcha validation: compare user input with generated captcha text
+    var displayedCaptcha = document.querySelector('.captchaBlock') ? document.querySelector('.captchaBlock').innerText.trim() : '';
+    var enteredCaptcha = $("#captchaText").val() ? $("#captchaText").val().trim() : '';
+
+    if (!enteredCaptcha) {
+        $("#statusMsg").show();
+        $("#statusMsg").text("Please enter the captcha.").addClass("error-message");
+        return;
+    }
+
+    if (!displayedCaptcha || enteredCaptcha !== displayedCaptcha.toString()) {
+        $("#statusMsg").show();
+        $("#statusMsg").text("Captcha is incorrect. Please try again.").addClass("error-message");
+        // refresh captcha so user gets a new one
+        if (typeof addCaptchaText === 'function') addCaptchaText();
+        $("#captchaText").val('');
+        return;
+    }
+
     // Client-side validation for required fields
     if (!userData.accountId || !userData.password) {
         $("#statusMsg").show();
@@ -70,6 +89,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 })
+
+// Regenerate captcha and focus the captcha input when login modal is shown
+document.addEventListener('DOMContentLoaded', function () {
+    var loginModalEl = document.querySelector('#loginModal');
+    if (loginModalEl) {
+        loginModalEl.addEventListener('shown.bs.modal', function () {
+            if (typeof addCaptchaText === 'function') {
+                addCaptchaText();
+            }
+            var capInput = document.getElementById('captchaText');
+            if (capInput) capInput.focus();
+            // hide previous status message
+            var status = document.getElementById('statusMsg');
+            if (status) { status.style.display = 'none'; status.textContent = ''; }
+        });
+
+        // Also clear captcha input and status when modal is hidden
+        loginModalEl.addEventListener('hidden.bs.modal', function () {
+            var capInput = document.getElementById('captchaText');
+            if (capInput) capInput.value = '';
+            var status = document.getElementById('statusMsg');
+            if (status) { status.style.display = 'none'; status.textContent = ''; }
+        });
+    }
+});
 
 
 axios.get('/check/userLoggedin').then((response) => {
