@@ -5,10 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     axios.get('/check/userLoggedin').then((response) => {
         console.log(response.data);
+        // If we are on the dedicated add-new-product page, do not auto-load the
+        // productDetails template (it would overwrite the add form).
+        const path = window.location.pathname || '';
+        const isAddNewPage = path.includes('addNewProduct.html');
+
         if (response.data.isLoggedin === true) {
-            loadSeletedPage('productDetails');
+            if (!isAddNewPage) {
+                loadSeletedPage('productDetails');
+            }
         } else {
-            loadSeletedPage('onload');
+            if (!isAddNewPage) {
+                loadSeletedPage('onload');
+            }
         }
     });
 });
@@ -53,8 +62,12 @@ var loadSeletedPage = (pageType) => {
         $('main').html(response.data);
 
         if (pageType === 'productDetails') {
-            if (typeof loadProductsToPage === 'function') loadProductsToPage();
-            if (typeof fillCategoryListUnderFilter === 'function') fillCategoryListUnderFilter();
+            // Avoid loading products if we're on the standalone addNewProduct page
+            const path = window.location.pathname || '';
+            if (!path.includes('addNewProduct.html')) {
+                if (typeof loadProductsToPage === 'function') loadProductsToPage();
+                if (typeof fillCategoryListUnderFilter === 'function') fillCategoryListUnderFilter();
+            }
         }
     }).catch(err => {
         console.error("Failed to load template:", err);
