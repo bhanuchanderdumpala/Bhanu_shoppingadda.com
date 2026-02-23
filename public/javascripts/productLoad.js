@@ -274,10 +274,13 @@ document.getElementById('toggleCartBtn').textContent = "❌ Close Cart"; }
 
 cart = JSON.parse(localStorage.getItem('cart')) || [];
 $(document).ready(() => {
-  
   renderCart();
-  fillCategoryListUnderFilter();
-  loadProductsToPage();
+  // Avoid loading product lists on the Add New Product page
+  const path = window.location.pathname || '';
+  if (!path.includes('addNewProduct.html')) {
+    fillCategoryListUnderFilter();
+    loadProductsToPage();
+  }
 });
 
 
